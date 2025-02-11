@@ -1,0 +1,12 @@
+name: Get Webhook URL
+
+on:
+  workflow_dispatch:
+
+jobs:
+  get_url:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Display URL
+        run: |
+          echo "Webhook URL: https://api.github.com/repos/${{ github.repository }}/actions/workflows/${{ github.workflow }}/dispatches"
