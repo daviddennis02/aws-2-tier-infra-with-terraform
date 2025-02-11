@@ -1,5 +1,5 @@
 # aws-2-tier-infra-with-terraform
-Terraform project to deploy a two-tier infrastructure with availability zones on the AWS cloud
+Terraform project to deploy a two-tier infrastructure with availability zones on the AWS cloud.
 
 # Architecture Diagram
 
