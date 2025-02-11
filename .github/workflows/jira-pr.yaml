@@ -2,7 +2,7 @@ name: Jira PR Automation
 
 on:
   repository_dispatch:
-    types: [jira_transition]
+    types: [jira_transition] # This is the correct configuration
 
 jobs:
   create_pr:
@@ -18,23 +18,22 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
-            const payload = context.payload.client_payload;
+            const payload = context.payload.inputs.client_payload; // Access client_payload correctly
             const issueKey = payload.issue.key;
             const issueSummary = payload.issue.fields.summary;
             const changelog = payload.changelog;
 
-            // Check if the status actually changed to "REQUEST FOR RELEASE"
-            if (changelog && changelog.items.some(item => item.field == 'status' && item.to == 'REQUEST FOR RELEASE')) { // Replace "REQUEST FOR RELEASE"
+            if (changelog && changelog.items.some(item => item.field == 'status' && item.to == 'REQUEST FOR RELEASE')) {
               const branchName = `feature/${issueKey}-${issueSummary.replace(/\s+/g, '-').toLowerCase()}`;
               core.setOutput('issueKey', issueKey);
               core.setOutput('branchName', branchName);
-              core.setOutput('issueSummary', issueSummary); // Output the summary
+              core.setOutput('issueSummary', issueSummary);
             } else {
-              core.setFailed('Issue not transitioned to REQUEST FOR RELEASE.  Exiting.'); // Fail the workflow
+              core.setFailed('Issue not transitioned to REQUEST FOR RELEASE. Exiting.');
             }
 
       - name: Create/Checkout Feature Branch
-        if: steps.jira_info.outcome == 'success' # Only run if the status change was correct
+        if: steps.jira_info.outcome == 'success'
         run: |
           git checkout -b ${{ steps.jira_info.outputs.branchName }} || git checkout ${{ steps.jira_info.outputs.branchName }}
 
