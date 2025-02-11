@@ -1,4 +1,4 @@
-name: Get Webhook URL
+name: Get-Webhook-URL
 
 on:
   workflow_dispatch:
